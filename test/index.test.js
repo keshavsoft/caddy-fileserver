@@ -16,11 +16,19 @@ import {
   initStaticSite,
   checkStaticSite,
   listStaticSites
-} from "../src/index.js";
-import { run } from "../src/cli.js";
+} from "../index.js";
+import { run } from "../cli.js";
+import * as v1Module from "../src/v1/index.js";
+import * as rootModule from "../index.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const samplePath = resolve(__dirname, "fixtures/caddy.sample.json");
+
+test("root index.js outside src exposes highest version (v1)", () => {
+  const rootKeys = Object.keys(rootModule).sort();
+  const v1Keys = Object.keys(v1Module).sort();
+  assert.deepEqual(rootKeys, v1Keys);
+});
 
 test("CLI exports run function", () => {
   assert.equal(typeof run, "function");
