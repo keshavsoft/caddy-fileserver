@@ -1,6 +1,6 @@
 {
   "name": "caddy-fileserver",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Automate Ubuntu filesystem document roots, starter templates, and Caddy file_server routes for zero-configuration static site hosting.",
   "type": "module",
   "main": "./index.js",
