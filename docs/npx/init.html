@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>npx caddy-fileserver init — Static Site Provisioner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen flex flex-col font-sans selection:bg-teal-500/30 selection:text-teal-200">
+
+  <!-- Navbar -->
+  <nav class="border-b border-zinc-800 bg-zinc-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-1.5 text-zinc-400 hover:text-white transition text-xs font-mono">
+          <i class="bi bi-arrow-left"></i>
+          <span>NPX Hub</span>
+        </a>
+        <span class="text-zinc-700">/</span>
+        <span class="font-bold text-sm tracking-wider uppercase text-teal-400 font-mono">init</span>
+      </div>
+      <div class="flex items-center gap-2 text-xs font-mono">
+        <a href="check.html" class="text-zinc-400 hover:text-teal-300 transition flex items-center gap-1">
+          <span>check</span>
+          <i class="bi bi-chevron-right text-[10px]"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12">
+
+    <!-- Header Badge -->
+    <div class="inline-flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 text-teal-400 px-3 py-1 rounded-full text-xs font-mono font-semibold mb-4">
+      <span>Stage 2 &bull; 100% Automated Static Site Hosting</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+      npx caddy-fileserver init
+    </h1>
+    <p class="text-zinc-400 text-sm sm:text-base mb-8 leading-relaxed">
+      Creates the Ubuntu filesystem document root, injects a production-grade starter template, and activates Caddy's native <code class="text-teal-300 font-mono">file_server</code> route with auto-reload.
+    </p>
+
+    <!-- Command Box -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 sm:p-5 mb-8 shadow-xl">
+      <div class="flex items-center justify-between text-xs text-zinc-400 uppercase font-mono tracking-wider mb-2">
+        <span>Simple NPX Command:</span>
+        <span class="text-teal-400 lowercase font-normal flex items-center gap-1">
+          <i class="bi bi-check-circle-fill text-[11px]"></i>
+          auto-detects /etc/caddy/caddy.json &amp; reloads
+        </span>
+      </div>
+      <div class="flex items-center justify-between gap-3 bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 font-mono text-xs sm:text-sm text-teal-300">
+        <code id="cmd-init" class="truncate select-all">npx caddy-fileserver init call.keshavsoft.com</code>
+        <button onclick="copyCmd('cmd-init', this)" class="shrink-0 bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 border border-teal-500/30 px-3 py-1.5 rounded-lg text-xs font-sans font-semibold transition flex items-center gap-1">
+          <i class="bi bi-clipboard"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Direct Output Box -->
+    <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 mb-10">
+      <div class="text-xs font-mono font-semibold text-zinc-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+        <i class="bi bi-terminal text-teal-400"></i>
+        <span>Instant Terminal Response</span>
+      </div>
+      <div class="bg-zinc-950 border border-zinc-800/80 rounded-lg p-4 font-mono text-xs text-zinc-200 space-y-1.5">
+        <div><span class="text-zinc-500">Subdomain:     </span><span class="text-teal-300 font-semibold">call.keshavsoft.com</span></div>
+        <div><span class="text-zinc-500">Document Root: </span><span class="text-cyan-400 font-semibold">/usr/share/call.keshavsoft.com</span></div>
+        <div><span class="text-zinc-500">Files Created: </span><span class="text-emerald-400 font-semibold">index.html</span></div>
+        <div><span class="text-zinc-500">Caddy Config:  </span><span class="text-zinc-400">/etc/caddy/caddy.json</span></div>
+        <div><span class="text-zinc-500">Caddy Reload:  </span><span class="text-emerald-400 font-semibold">Success</span></div>
+        <div><span class="text-zinc-500">Live HTTPS:    </span><span class="text-emerald-400 font-semibold">Yes (200 OK - Verified)</span></div>
+      </div>
+    </div>
+
+    <!-- The 5 Steps -->
+    <section class="mb-12">
+      <h2 class="text-lg font-bold text-white uppercase tracking-wider mb-4 border-b border-zinc-800 pb-2 flex items-center gap-2">
+        <i class="bi bi-list-check text-teal-400"></i>
+        <span>The 5 Atomic Steps Performed</span>
+      </h2>
+      <ol class="space-y-3 text-xs sm:text-sm text-zinc-300 list-decimal list-inside leading-relaxed">
+        <li><strong>Provision Ubuntu Folder:</strong> Creates <code class="text-teal-300 font-mono">/usr/share/&lt;domain&gt;</code> with standard permissions.</li>
+        <li><strong>Drop Starter Template:</strong> Injects a dark-mode, responsive <code class="text-teal-300 font-mono">index.html</code> proving live traffic and disk read access.</li>
+        <li><strong>Inject Caddy Route:</strong> Configures standard subroute with <code class="text-teal-300 font-mono">vars</code> root and <code class="text-teal-300 font-mono">file_server</code>.</li>
+        <li><strong>Hot-Reload Caddy:</strong> Preserves existing TLS handshakes with zero downtime.</li>
+        <li><strong>Live HTTPS Verification:</strong> Probes <code class="text-teal-300 font-mono">https://&lt;domain&gt;</code> to confirm 200 OK.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-900 bg-zinc-950 py-6 text-center text-xs text-zinc-600 font-mono">
+    KeshavSoft &copy; 2026 &bull; caddy-fileserver v1.0.0
+  </footer>
+
+  <script>
+    function copyCmd(id, btn) {
+      const text = document.getElementById(id).innerText.trim();
+      navigator.clipboard.writeText(text);
+      const original = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-check2"></i> Copied!';
+      btn.classList.add('bg-emerald-500/20', 'text-emerald-300');
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-300');
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

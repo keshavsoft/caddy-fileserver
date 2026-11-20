@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>caddy-fileserver — The Bridge Between Caddy TLS &amp; Ubuntu Filesystem</title>
+  <meta name="description" content="Automate Ubuntu document roots (/usr/share/...), starter templates, and Caddy file_server routes for zero-configuration static site hosting.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📁</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+    .pulse-badge { animation: pulse-subtle 3s infinite ease-in-out; }
+  </style>
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen flex flex-col font-sans selection:bg-teal-500/30 selection:text-teal-200">
+
+  <!-- Navbar -->
+  <nav class="border-b border-zinc-800 bg-zinc-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      
+      <!-- Brand -->
+      <a href="#" class="flex items-center gap-2.5 shrink-0 text-decoration-none">
+        <span class="w-7 h-7 rounded-lg bg-gradient-to-tr from-teal-500 to-emerald-600 flex items-center justify-center text-zinc-950 font-black text-sm">📁</span>
+        <span class="font-bold text-sm tracking-wider uppercase text-zinc-200">caddy-fileserver</span>
+        <span class="text-[10px] font-semibold text-teal-400 bg-teal-950/80 border border-teal-800/80 px-2 py-0.5 rounded-full">v1.0.0</span>
+      </a>
+
+      <!-- Nav Links -->
+      <div class="flex items-center gap-2 text-xs font-mono">
+        <a href="#the-story" class="text-zinc-400 hover:text-zinc-200 px-2.5 py-1 rounded hover:bg-zinc-800/80 transition hidden sm:inline-block">The Story</a>
+        <a href="#architecture" class="text-zinc-400 hover:text-zinc-200 px-2.5 py-1 rounded hover:bg-zinc-800/80 transition hidden sm:inline-block">Architecture</a>
+        <a href="#builder" class="bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2.5 py-1 rounded hover:bg-teal-500/30 transition flex items-center gap-1">
+          <i class="bi bi-sliders"></i>
+          <span>Command Builder</span>
+        </a>
+        <a href="npx/index.html" class="text-zinc-400 hover:text-teal-400 px-2.5 py-1 rounded hover:bg-zinc-800/80 transition hidden md:inline-block">NPX Hub</a>
+        <a href="https://github.com/keshavsoft/caddy-fileserver" target="_blank" rel="noopener noreferrer"
+          class="text-zinc-400 hover:text-white p-1.5 transition ml-1" title="View on GitHub">
+          <i class="bi bi-github text-base"></i>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 text-center">
+
+    <!-- Badge -->
+    <div class="inline-flex items-center gap-2 bg-teal-500/10 border border-teal-500/30 text-teal-300 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium mb-6 pulse-badge">
+      <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+      <span>Stage 2 &bull; The Missing Link in Cloud Hosting</span>
+    </div>
+
+    <!-- Main Title -->
+    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6 max-w-4xl mx-auto leading-tight sm:leading-none">
+      The Bridge Between <span class="bg-gradient-to-r from-teal-400 to-emerald-400 bg-clip-text text-transparent">Caddy TLS</span> and <span class="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">Ubuntu Filesystem</span>
+    </h1>
+
+    <p class="text-zinc-400 text-sm sm:text-base max-w-2xl mx-auto mb-8 leading-relaxed">
+      Stop manually writing Caddyfile subroutes and creating <code class="text-zinc-300 font-mono">/usr/share</code> folders. <strong>caddy-fileserver</strong> provisions the Ubuntu directory, drops a responsive starter template, and configures Caddy's native <code class="text-teal-300 font-mono">file_server</code> route in a single atomic command.
+    </p>
+
+    <!-- Quick Run Terminal Box -->
+    <div class="max-w-2xl mx-auto bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-14 shadow-2xl text-left">
+      <div class="flex items-center justify-between text-xs text-zinc-400 font-mono mb-2">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500/60 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-amber-500/60 inline-block"></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/60 inline-block"></span>
+          <span class="ml-2 text-zinc-500">Zero-Install Quick Start</span>
+        </span>
+        <span class="text-teal-400">Auto-detects /etc/caddy/caddy.json</span>
+      </div>
+      <div class="flex items-center justify-between gap-3 bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 font-mono text-xs sm:text-sm text-teal-300">
+        <code id="hero-cmd" class="truncate select-all">npx caddy-fileserver init call.keshavsoft.com</code>
+        <button onclick="copySnippet('hero-cmd', this)" class="shrink-0 bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 border border-teal-500/30 px-3 py-1.5 rounded-lg text-xs font-sans font-semibold transition flex items-center gap-1">
+          <i class="bi bi-clipboard"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: THE 3-STAGE SUBDOMAIN MATURITY MODEL                 -->
+    <!-- ============================================================ -->
+    <section id="the-story" class="w-full text-left mb-16 scroll-mt-20">
+      <div class="border-b border-zinc-800 pb-3 mb-8">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="bi bi-diagram-3 text-teal-400"></i>
+          <span>The VPS Subdomain Maturity Model</span>
+        </h2>
+        <p class="text-xs text-zinc-400 mt-1">Why jumping directly from DNS to Node.js causes production downtime.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Stage 1 -->
+        <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2 py-0.5 rounded-full">Stage 1</span>
+              <span class="text-zinc-500 text-xs font-mono">Zero Files</span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Smoke Probe</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+              Verify GoDaddy DNS propagation and Let's Encrypt SSL certificate with zero disk folders and zero backend ports.
+            </p>
+          </div>
+          <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 truncate">
+            <span class="text-amber-400">npx caddy-subdomain probe</span> call.keshavsoft.com
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div class="bg-zinc-900/90 border-2 border-teal-500/40 rounded-xl p-5 flex flex-col justify-between relative shadow-lg shadow-teal-500/5">
+          <div class="absolute -top-3 right-4 bg-teal-500 text-zinc-950 font-mono text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">
+            caddy-fileserver
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-teal-400 bg-teal-950/60 border border-teal-800/60 px-2 py-0.5 rounded-full">Stage 2</span>
+              <span class="text-teal-400 text-xs font-mono font-semibold">Real Disk I/O</span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Static File Server</h3>
+            <p class="text-xs text-zinc-300 leading-relaxed mb-4">
+              Provision <code class="text-teal-300 font-mono">/usr/share/&lt;domain&gt;</code>, inject a responsive starter template, configure Caddy's native <code class="text-teal-300 font-mono">file_server</code>, and verify static traffic live.
+            </p>
+          </div>
+          <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-teal-300 truncate">
+            <span class="text-teal-400 font-bold">npx caddy-fileserver init</span> call.keshavsoft.com
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-2 py-0.5 rounded-full">Stage 3</span>
+              <span class="text-zinc-500 text-xs font-mono">Node / Docker</span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-2">Backend Application</h3>
+            <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+              When full dynamic backend SSR or APIs are needed, promote the route to a reverse proxy and manage via <code class="text-cyan-300 font-mono">ubuntu-service-cli</code>.
+            </p>
+          </div>
+          <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 truncate">
+            <span class="text-cyan-400">ubuntu-service-cli create</span> &amp; proxy :5000
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: INTERACTIVE COMMAND BUILDER                         -->
+    <!-- ============================================================ -->
+    <section id="builder" class="w-full text-left mb-16 scroll-mt-20">
+      <div class="border-b border-zinc-800 pb-3 mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="bi bi-sliders text-teal-400"></i>
+          <span>Interactive Command Builder</span>
+        </h2>
+        <p class="text-xs text-zinc-400 mt-1">Configure your parameters below to generate the exact copy-pasteable CLI command.</p>
+      </div>
+
+      <div class="bg-zinc-900/80 border border-zinc-800 rounded-xl p-6 shadow-xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          
+          <!-- Action Selector -->
+          <div>
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Action</label>
+            <select id="gen-action" onchange="updateCommand()" class="w-full bg-zinc-950 border border-zinc-700/80 text-zinc-200 text-xs sm:text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-teal-400">
+              <option value="init" selected>init — Provision folder, starter HTML &amp; Caddy route</option>
+              <option value="check">check — Audit Ubuntu disk &amp; Caddy route alignment</option>
+              <option value="template">template — Generate standalone starter HTML/XML</option>
+              <option value="list">list — Scan all static file servers on VPS</option>
+            </select>
+          </div>
+
+          <!-- Domain -->
+          <div id="field-domain">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Subdomain</label>
+            <input type="text" id="gen-domain" value="call.keshavsoft.com" oninput="updateCommand()"
+              class="w-full bg-zinc-950 border border-zinc-700/80 text-zinc-200 text-xs sm:text-sm rounded-lg px-3 py-2 font-mono focus:outline-none focus:border-teal-400"
+              placeholder="e.g. call.keshavsoft.com">
+          </div>
+
+          <!-- Document Root (Optional Override) -->
+          <div id="field-root">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Document Root <span class="text-zinc-500 font-normal">(Default: /usr/share/&lt;domain&gt;)</span></label>
+            <input type="text" id="gen-root" value="" oninput="updateCommand()"
+              class="w-full bg-zinc-950 border border-zinc-700/80 text-zinc-200 text-xs sm:text-sm rounded-lg px-3 py-2 font-mono focus:outline-none focus:border-teal-400"
+              placeholder="/usr/share/caddy/call.keshavsoft.com">
+          </div>
+
+          <!-- Config Path -->
+          <div id="field-config">
+            <label class="block text-xs font-semibold text-zinc-300 mb-1.5">Caddy JSON Path <span class="text-zinc-500 font-normal">(Optional Override)</span></label>
+            <input type="text" id="gen-config" value="" oninput="updateCommand()"
+              class="w-full bg-zinc-950 border border-zinc-700/80 text-zinc-200 text-xs sm:text-sm rounded-lg px-3 py-2 font-mono focus:outline-none focus:border-teal-400"
+              placeholder="Auto-detected (/etc/caddy/caddy.json)">
+          </div>
+
+        </div>
+
+        <!-- Options Checkboxes -->
+        <div id="field-flags" class="flex flex-wrap gap-4 text-xs font-medium text-zinc-300 border-t border-zinc-800 pt-4 mb-6">
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="flag-xml" onchange="updateCommand()" class="accent-teal-400 rounded">
+            <span>--xml (Include sitemap.xml)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="flag-force" onchange="updateCommand()" class="accent-teal-400 rounded">
+            <span>--force (Overwrite existing route)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="flag-noreload" onchange="updateCommand()" class="accent-teal-400 rounded">
+            <span>--no-reload (Skip reload)</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer select-none">
+            <input type="checkbox" id="flag-nobackup" onchange="updateCommand()" class="accent-teal-400 rounded">
+            <span>--no-backup (Skip backup file)</span>
+          </label>
+        </div>
+
+        <!-- Generated Command Output -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Generated Command</label>
+          <div class="flex items-center justify-between gap-3 bg-zinc-950 p-4 rounded-xl border border-zinc-800 font-mono text-xs sm:text-sm text-teal-300">
+            <code id="gen-output" class="truncate select-all">npx caddy-fileserver init call.keshavsoft.com</code>
+            <button onclick="copySnippet('gen-output', this)" class="shrink-0 bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 border border-teal-500/30 px-3 py-1.5 rounded-lg transition flex items-center gap-1.5 font-sans font-semibold text-xs">
+              <i class="bi bi-clipboard"></i>
+              <span>Copy</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- SECTION: PROGRAMMATIC ESM LIBRARY API                        -->
+    <!-- ============================================================ -->
+    <section class="w-full text-left mb-16">
+      <div class="border-b border-zinc-800 pb-3 mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="bi bi-code-slash text-teal-400"></i>
+          <span>Programmatic ESM Library</span>
+        </h2>
+        <p class="text-xs text-zinc-400 mt-1">Directly import into your Node.js automation scripts, provisioning tools, and microservices.</p>
+      </div>
+
+      <div class="bg-zinc-900/80 border border-zinc-800 rounded-xl p-6 font-mono text-xs text-zinc-200">
+        <div class="text-zinc-500 mb-2">// 1. Import from caddy-fileserver</div>
+        <pre class="text-teal-300 mb-6 overflow-x-auto"><span class="text-zinc-400">import</span> { 
+  initStaticSite, 
+  checkStaticSite, 
+  listStaticSites,
+  buildStaticRoute 
+} <span class="text-zinc-400">from</span> <span class="text-emerald-400">"caddy-fileserver"</span>;</pre>
+
+        <div class="text-zinc-500 mb-2">// 2. Initialize directory, starter template, Caddy route, reload &amp; probe</div>
+        <pre class="text-zinc-300 mb-6 overflow-x-auto"><span class="text-zinc-400">const</span> site = <span class="text-teal-300">await initStaticSite</span>({
+  domain: <span class="text-amber-200">"call.keshavsoft.com"</span>,
+  root: <span class="text-amber-200">"/usr/share/call.keshavsoft.com"</span>,
+  xml: <span class="text-purple-400">true</span>
+});
+console.log(<span class="text-emerald-400">`Live at: ${site.domain} (root: ${site.rootPath})`</span>);</pre>
+
+        <div class="text-zinc-500 mb-2">// 3. Audit both Ubuntu filesystem &amp; Caddy JSON</div>
+        <pre class="text-zinc-300 overflow-x-auto"><span class="text-zinc-400">const</span> audit = <span class="text-teal-300">checkStaticSite</span>(<span class="text-amber-200">"call.keshavsoft.com"</span>);
+console.log(<span class="text-emerald-400">`Folder exists: ${audit.filesystem.exists}, Caddy route: ${audit.caddy.exists}`</span>);</pre>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full border-t border-zinc-800/80 pt-8 mt-12 text-center text-xs text-zinc-500 font-mono">
+      <p class="mb-2">
+        Part of the <span class="text-zinc-300 font-semibold">KeshavSoft Caddy Suite</span> &bull; 
+        <a href="https://github.com/keshavsoft/caddy-fileserver" class="text-teal-400 hover:underline">GitHub</a> &bull; 
+        <a href="https://www.npmjs.com/package/caddy-fileserver" class="text-teal-400 hover:underline">npm</a> &bull; 
+        <a href="https://keshavsoft.github.io/caddy-subdomain/" class="text-amber-400 hover:underline">caddy-subdomain</a> &bull;
+        <a href="https://keshavsoft.github.io/ubuntu-service-cli/" class="text-cyan-400 hover:underline">ubuntu-service-cli</a>
+      </p>
+      <p>&copy; KeshavSoft &bull; ISC License</p>
+    </footer>
+
+  </main>
+
+  <script>
+    function updateCommand() {
+      const action = document.getElementById('gen-action').value;
+      const domain = document.getElementById('gen-domain').value.trim();
+      const root = document.getElementById('gen-root').value.trim();
+      const config = document.getElementById('gen-config').value.trim();
+      const xml = document.getElementById('flag-xml').checked;
+      const force = document.getElementById('flag-force').checked;
+      const noreload = document.getElementById('flag-noreload').checked;
+      const nobackup = document.getElementById('flag-nobackup').checked;
+
+      const domainField = document.getElementById('field-domain');
+      const rootField = document.getElementById('field-root');
+      const configField = document.getElementById('field-config');
+      const flagsField = document.getElementById('field-flags');
+
+      if (action === 'init') {
+        domainField.classList.remove('hidden');
+        rootField.classList.remove('hidden');
+        configField.classList.remove('hidden');
+        flagsField.classList.remove('hidden');
+      } else if (action === 'check') {
+        domainField.classList.remove('hidden');
+        rootField.classList.remove('hidden');
+        configField.classList.remove('hidden');
+        flagsField.classList.add('hidden');
+      } else if (action === 'template') {
+        domainField.classList.remove('hidden');
+        rootField.classList.remove('hidden');
+        configField.classList.add('hidden');
+        flagsField.classList.remove('hidden');
+      } else if (action === 'list') {
+        domainField.classList.add('hidden');
+        rootField.classList.add('hidden');
+        configField.classList.remove('hidden');
+        flagsField.classList.add('hidden');
+      }
+
+      let parts = ['npx', 'caddy-fileserver', action];
+
+      if (action !== 'list' && domain) {
+        parts.push(domain);
+      }
+
+      if ((action === 'init' || action === 'check' || action === 'template') && root) {
+        parts.push(root);
+      }
+
+      if (config && action !== 'template') {
+        parts.push(config);
+      }
+
+      if (action === 'init' || action === 'template') {
+        if (xml) parts.push('--xml');
+      }
+
+      if (action === 'init') {
+        if (force) parts.push('--force');
+        if (noreload) parts.push('--no-reload');
+        if (nobackup) parts.push('--no-backup');
+      }
+
+      document.getElementById('gen-output').textContent = parts.join(' ');
+    }
+
+    function copySnippet(elementId, btn) {
+      const el = document.getElementById(elementId);
+      const text = el.textContent || el.innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = '<i class="bi bi-check2 text-emerald-400"></i><span class="text-emerald-400">Copied!</span>';
+        setTimeout(() => { btn.innerHTML = orig; }, 1500);
+      });
+    }
+
+    updateCommand();
+  </script>
+</body>
+</html>

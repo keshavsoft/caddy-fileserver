@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>npx caddy-fileserver list — Static File Server Fleet Inventory</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen flex flex-col font-sans selection:bg-teal-500/30 selection:text-teal-200">
+
+  <!-- Navbar -->
+  <nav class="border-b border-zinc-800 bg-zinc-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-1.5 text-zinc-400 hover:text-white transition text-xs font-mono">
+          <i class="bi bi-arrow-left"></i>
+          <span>NPX Hub</span>
+        </a>
+        <span class="text-zinc-700">/</span>
+        <span class="font-bold text-sm tracking-wider uppercase text-teal-400 font-mono">list</span>
+      </div>
+      <div class="flex items-center gap-2 text-xs font-mono">
+        <a href="init.html" class="text-zinc-400 hover:text-teal-300 transition flex items-center gap-1">
+          <span>init</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12">
+
+    <!-- Header Badge -->
+    <div class="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/30 text-purple-400 px-3 py-1 rounded-full text-xs font-mono font-semibold mb-4">
+      <span>Inventory &bull; Global VPS Audit</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+      npx caddy-fileserver list
+    </h1>
+    <p class="text-zinc-400 text-sm sm:text-base mb-8 leading-relaxed">
+      Scans Caddy JSON and cross-checks whether each configured document root exists on the Linux filesystem.
+    </p>
+
+    <!-- Command Box -->
+    <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 sm:p-5 mb-8 shadow-xl">
+      <div class="flex items-center justify-between gap-3 bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 font-mono text-xs sm:text-sm text-teal-300">
+        <code id="cmd-list" class="truncate select-all">npx caddy-fileserver list</code>
+        <button onclick="copyCmd('cmd-list', this)" class="shrink-0 bg-teal-500/20 text-teal-300 hover:bg-teal-500/30 border border-teal-500/30 px-3 py-1.5 rounded-lg text-xs font-sans font-semibold transition flex items-center gap-1">
+          <i class="bi bi-clipboard"></i>
+          <span>Copy</span>
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-900 bg-zinc-950 py-6 text-center text-xs text-zinc-600 font-mono">
+    KeshavSoft &copy; 2026 &bull; caddy-fileserver v1.0.0
+  </footer>
+
+  <script>
+    function copyCmd(id, btn) {
+      const text = document.getElementById(id).innerText.trim();
+      navigator.clipboard.writeText(text);
+      const original = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-check2"></i> Copied!';
+      btn.classList.add('bg-emerald-500/20', 'text-emerald-300');
+      setTimeout(() => {
+        btn.innerHTML = original;
+        btn.classList.remove('bg-emerald-500/20', 'text-emerald-300');
+      }, 1500);
+    }
+  </script>
+</body>
+</html>

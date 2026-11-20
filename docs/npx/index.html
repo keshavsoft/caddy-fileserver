@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>caddy-fileserver — NPX Command Catalog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-zinc-950 text-zinc-100 antialiased min-h-screen flex flex-col font-sans selection:bg-teal-500/30 selection:text-teal-200">
+
+  <!-- Navbar -->
+  <nav class="border-b border-zinc-800 bg-zinc-900/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="flex items-center gap-1.5 text-zinc-400 hover:text-white transition text-xs font-mono">
+          <i class="bi bi-arrow-left"></i>
+          <span>Home</span>
+        </a>
+        <span class="text-zinc-700">/</span>
+        <span class="font-bold text-sm tracking-wider uppercase text-teal-400 font-mono">NPX Catalog</span>
+      </div>
+      <div class="flex items-center gap-2 text-xs font-mono text-zinc-400">
+        <span>caddy-fileserver v1.0.0</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-4xl mx-auto px-4 sm:px-6 py-12">
+
+    <div class="mb-10 text-center sm:text-left">
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">
+        NPX Command Catalog
+      </h1>
+      <p class="text-zinc-400 text-sm max-w-2xl leading-relaxed">
+        Execute standalone static hosting operations with zero local dependencies. Select any command below to inspect its live workflow, terminal outputs, and VPS options.
+      </p>
+    </div>
+
+    <!-- Commands Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+
+      <!-- 1. INIT -->
+      <a href="init.html" class="group bg-zinc-900/70 border border-zinc-800 hover:border-teal-500/50 rounded-xl p-6 transition shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold text-teal-400 bg-teal-950/60 border border-teal-800/60 px-2.5 py-0.5 rounded-full">
+              Core Provisioner
+            </span>
+            <i class="bi bi-arrow-right text-zinc-500 group-hover:text-teal-400 group-hover:translate-x-1 transition"></i>
+          </div>
+          <h2 class="text-xl font-bold text-white group-hover:text-teal-300 font-mono flex items-center gap-2 mb-2">
+            <span>init &lt;domain&gt;</span>
+          </h2>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+            Creates the directory on Ubuntu, drops starter index.html, injects the Caddy file_server route, and reloads in one atomic step.
+          </p>
+        </div>
+        <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 truncate">
+          <span class="text-teal-400">npx caddy-fileserver init</span> call.keshavsoft.com
+        </div>
+      </a>
+
+      <!-- 2. CHECK -->
+      <a href="check.html" class="group bg-zinc-900/70 border border-zinc-800 hover:border-teal-500/50 rounded-xl p-6 transition shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/60 px-2.5 py-0.5 rounded-full">
+              Audit &amp; Diagnostics
+            </span>
+            <i class="bi bi-arrow-right text-zinc-500 group-hover:text-teal-400 group-hover:translate-x-1 transition"></i>
+          </div>
+          <h2 class="text-xl font-bold text-white group-hover:text-teal-300 font-mono flex items-center gap-2 mb-2">
+            <span>check &lt;domain&gt;</span>
+          </h2>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+            Audits both Ubuntu disk directory existence and Caddy JSON configuration alignment to guarantee no 404 or misconfiguration.
+          </p>
+        </div>
+        <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 truncate">
+          <span class="text-teal-400">npx caddy-fileserver check</span> call.keshavsoft.com
+        </div>
+      </a>
+
+      <!-- 3. TEMPLATE -->
+      <a href="template.html" class="group bg-zinc-900/70 border border-zinc-800 hover:border-teal-500/50 rounded-xl p-6 transition shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2.5 py-0.5 rounded-full">
+              Asset Generator
+            </span>
+            <i class="bi bi-arrow-right text-zinc-500 group-hover:text-teal-400 group-hover:translate-x-1 transition"></i>
+          </div>
+          <h2 class="text-xl font-bold text-white group-hover:text-teal-300 font-mono flex items-center gap-2 mb-2">
+            <span>template &lt;domain&gt;</span>
+          </h2>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+            Generates standalone starter index.html and XML sitemap into any output directory without modifying your Caddy server config.
+          </p>
+        </div>
+        <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 truncate">
+          <span class="text-teal-400">npx caddy-fileserver template</span> call.keshavsoft.com ./dist
+        </div>
+      </a>
+
+      <!-- 4. LIST -->
+      <a href="list.html" class="group bg-zinc-900/70 border border-zinc-800 hover:border-teal-500/50 rounded-xl p-6 transition shadow-lg flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-xs font-mono font-bold text-purple-400 bg-purple-950/60 border border-purple-800/60 px-2.5 py-0.5 rounded-full">
+              Inventory
+            </span>
+            <i class="bi bi-arrow-right text-zinc-500 group-hover:text-teal-400 group-hover:translate-x-1 transition"></i>
+          </div>
+          <h2 class="text-xl font-bold text-white group-hover:text-teal-300 font-mono flex items-center gap-2 mb-2">
+            <span>list</span>
+          </h2>
+          <p class="text-xs text-zinc-400 leading-relaxed mb-4">
+            Scans Caddy configuration for every active static file server and cross-checks whether its document root physically exists on disk.
+          </p>
+        </div>
+        <div class="bg-zinc-950 p-2.5 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300 truncate">
+          <span class="text-teal-400">npx caddy-fileserver list</span>
+        </div>
+      </a>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-zinc-900 bg-zinc-950 py-6 text-center text-xs text-zinc-600 font-mono">
+    KeshavSoft &copy; 2026 &bull; caddy-fileserver v1.0.0
+  </footer>
+
+</body>
+</html>
